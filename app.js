@@ -11,6 +11,7 @@ const loginMiddleware = require('./middlewares/loginMiddleware')
 const addSalepersonRouter = require('./router/addSalepersonRouter')
 const setPasswordRouter = require('./router/setPasswordRouter')
 const profileRouter = require('./router/profileRouter')
+const fistTimeLoginMiddleware = require('./middlewares/firstTimeLoginMiddleware')
 const con = require('./database/db')
 
 const app = express();
@@ -34,19 +35,19 @@ app.use(loginMiddleware)
 
 app.use(express.static(__dirname + '/public'));
 
-app.use('/transaction', transactionRouter)
-app.use('/sale', saleRouter)
+app.use('/transaction', fistTimeLoginMiddleware, transactionRouter)
+app.use('/sale', fistTimeLoginMiddleware, saleRouter)
 app.use('/salepersons', addSalepersonRouter)
 app.use('/logout', logoutRouter)
 app.use('/set_password', setPasswordRouter)
-app.use('/profile', profileRouter)
+app.use('/profile', fistTimeLoginMiddleware, profileRouter)
 app.get('/', (req, res) => {
   res.set('Cache-Control', 'no-store')
 
-  // If first time login, redirect to change password
-  if(req.session.user.first_login) {
-    return res.redirect('/set_password')
-  }
+  // If first time login and not admin, redirect to change password
+  // if(req.session.user.first_login && !req.session.user.is_admin) {
+  //   return res.redirect('/set_password')
+  // }
   if(!req.session.user) {
       return res.redirect('/login')
   }
