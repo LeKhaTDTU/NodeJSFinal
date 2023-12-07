@@ -1,21 +1,19 @@
 //app.js
 const express = require('express');
-const app = express();
 const port = 8080;
-const bodyParser = require('body-parser');
-const mysql = require('mysql');
-const bcrypt = require('bcrypt');
-const usersRouter = require('./router/usersRouter')
 const session = require('express-session')
+
 const transactionRouter = require('./router/transactionRouter')
-const homeRouter = require('./router/homeRouter')
 const saleRouter = require('./router/saleRouter')
 const loginRouter = require('./router/loginRouter')
 const logoutRouter = require('./router/logoutRouter')
 const loginMiddleware = require('./middlewares/loginMiddleware')
 const addSalepersonRouter = require('./router/addSalepersonRouter')
 const setPasswordRouter = require('./router/setPasswordRouter')
-const saltRounds = 10;
+const profileRouter = require('./router/profileRouter')
+const con = require('./database/db')
+
+const app = express();
 app.set('view engine', 'ejs')
 
 
@@ -41,21 +39,20 @@ app.use('/sale', saleRouter)
 app.use('/salepersons', addSalepersonRouter)
 app.use('/logout', logoutRouter)
 app.use('/set_password', setPasswordRouter)
-
+app.use('/profile', profileRouter)
 app.get('/', (req, res) => {
   res.set('Cache-Control', 'no-store')
-  if(req.session.first_login && !req.session.role) {
+
+  // If first time login, redirect to change password
+  if(req.session.user.first_login) {
     return res.redirect('/set_password')
   }
   if(!req.session.user) {
       return res.redirect('/login')
   }
-  const username = req.session.user
-  const role = req.session.role
-  const user_id = req.session.user_id
-  console.log(username, role, user_id)
-
-  res.render('home', {username, role, user_id})
+  
+  const user = req.session.user
+  res.render('home', {user: user})
 
 })
 // Routes

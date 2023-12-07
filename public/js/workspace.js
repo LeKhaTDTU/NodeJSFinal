@@ -4,9 +4,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const product_table_body = document.getElementById('product-table-body')
     const total_quantity_element = document.getElementById('total-quantity')
     const total_cost_element = document.getElementById('total-cost')
-    const customer_pay = document.getElementById('customerPay')
-    const change = document.getElementById('changeToCustomer')
-    
+    let customer_pay = document.getElementById('customerPay')
+
+    let change_value = 0
+    let customer_pay_value = 0
+
+    customer_pay.addEventListener('keyup', () => {
+        const total_cost = parseInt(document.getElementById('total-cost').textContent)
+        customer_pay_value = parseInt(document.getElementById('customerPay').value)
+
+        const changeToCustomer = document.getElementById('changeToCustomer')
+        if(!customer_pay_value) {
+            changeToCustomer.textContent = 0
+            return ;
+        }
+        console.log('Customer pay: ' + customer_pay_value)
+        change_value = customer_pay_value - total_cost
+        console.log('Change to customer: ' + change_value)
+        changeToCustomer.textContent = change_value
+    })
 
 
     let selected_products = new Map();
@@ -26,6 +42,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
     });
+
+
 
     // Function to handle adding a product to the cart
     function addProduct(product) {
@@ -53,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Update products that customer selected to table
     function updateSelectedProducts() {
-        product_table_body.innerHTML = '';
+        product_table_body.innerHTML = ''
         
         selected_products.forEach(item => {
             const tr = document.createElement('tr');
@@ -61,8 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>${item.name}</td>
                 <td> ${item.quantity}</td>
                 <td>${item.price}</td>
-                <td><button data-btn="${item.id}" class="desc-btn"><i class="fa-solid fa-trash-can"></i></button></td>
-            `;
+                <td><button data-btn="${item.id}" class="desc-btn"><i class="fa-solid fa-trash-can"></i></button></td>`;
 
 
             product_table_body.appendChild(tr);
@@ -145,7 +162,8 @@ document.addEventListener('DOMContentLoaded', function () {
             total_quantity: calTotal()[0],
             date: order_date,
             time: order_time,
-            staff: 'John Doe'
+            amount_given_by_customer: customer_pay_value,
+            change_to_customer: change_value
         }
 
         fetch('http://localhost:8080/sale', {

@@ -1,8 +1,5 @@
 const con = require('../../database/db')
 
-
-
-
 exports.executeQuery = () => {
     return new Promise((resolve, reject) => {
         con.query('SELECT * FROM Products', (err, results) => {

@@ -85,7 +85,8 @@
                     
                     <div><strong>Total quantity</strong>: <span id="total-quantity">0</span></div>
                     <div><strong>Total cost</strong>: <span id="total-cost">0</span></div>
-                   
+                    <div><strong>Customer gives: </strong><input type="number" id="customerPay"></div>
+                    <div><strong>Change: </strong><span id="changeToCustomer">0</span></div>
                 </div>
                 <div class="cart-process">
                     <div class="cart-buttons">
@@ -98,19 +99,20 @@
     </body>
 
     <script>
-        function calChange() {
-            const total_cost = parseInt(document.getElementById('total-cost').textContent)
-            const customer_pay = parseInt(document.getElementById('customerPay').value)
-            const changeToCustomer = document.getElementById('changeToCustomer')
-            if(!customer_pay) {
-                changeToCustomer.textContent = 0
-                return ;
-            }
-            
-            const change = customer_pay - total_cost
-            changeToCustomer.textContent = change
+        // function calChange() {
+        //     const total_cost = parseInt(document.getElementById('total-cost').textContent)
+        //     const customer_pay = parseInt(document.getElementById('customerPay').value)
+        //     const changeToCustomer = document.getElementById('changeToCustomer')
+        //     if(!customer_pay) {
+        //         changeToCustomer.textContent = 0
+        //         return ;
+        //     }
+        //     const change = customer_pay - total_cost
+        //     changeToCustomer.textContent = change
+        //     console.log(customer_pay)
+        //     console.log(changeToCustomer.textContent)
 
-        }
+        // }
     </script>
         
 </html>

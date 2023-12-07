@@ -2,7 +2,6 @@ const express = require('express')
 const con = require('../database/db')
 const app = express.Router()
 
-
 let selected_products = []
 
 app.get('/', (req, res) => {
@@ -12,7 +11,7 @@ app.get('/', (req, res) => {
 
 const saleStatus = (req, res, next) => {
     if(selected_products.length === 0) {
-        res.redirect('/products')
+        res.redirect('/transaction')
         return ;
     }
     // After finishing transaction, delete all selected products
@@ -24,36 +23,25 @@ app.get('/complete', saleStatus, (req, res) => {
     res.render('complete')
 })
 app.post('/', (req, res) => {
-    
-    const {products, total_cost, total_quantity, date, time, staff} = req.body
-
-    
+    const {products, total_cost, total_quantity, date, time, amount_given_by_customer, change_to_customer} = req.body
     if(products.length === 0) {
-        console.log('No products selected')
+        return res.redirect('/transaction')
     }
-    else {
-        selected_products = products
-        products.forEach(p => {
-            const {id, name, quantity, price} = p[1]
-            console.log(id, name, quantity, price)
-            const sql = 'insert into Products_sold(product_id, product_name, sell_price, quantity, sell_date) values(?, ?, ?, ?, ?)'
-            const params = [id, name, price, quantity, date]
-            
-            con.query(sql, params, (err, results, fields) => {
-                if(err) throw err
-                if(results.affectedRows >= 1) {
-                    console.log('Added to db successfully')
-  
-                }
-                else {
-                    console.log('Something went wrong')
-                }
-            })
 
-            
-        })
+    // Assign value for selected_products
+    selected_products = products
+    // console.log(req.body)
+    const sql = 'INSERT INTO Sales (total_quantity, total_price, amount_given_by_customer, change_to_customer, user_id) VALUES (?, ?, ?, ?, ?)'
+    const params = [total_quantity, total_cost, amount_given_by_customer, change_to_customer, req.session.user.user_id]
 
-    }
+    con.query(sql, params, (insertError, insertResult) => {
+        if(insertError) {
+            res.status(500).json({error: insertError})
+        }
+        else {
+            console.log('Add to databse successfully')
+        }
+    })
 })
 
 

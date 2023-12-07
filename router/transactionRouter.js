@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
                 categories.add(p.category)
             })
             
-            res.render('transaction', {products, categories, username: req.session.user, role: req.session.role})
+            res.render('transaction', {products, categories, user: req.session.user})
         })
         .catch((err) => {
             res.send(err)
@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
     else {
         productData.getProductByName(product_name)
         .then((products) => {
-            res.render('transaction', {products, categories, username: req.session.user, role: req.session.role})
+            res.render('transaction', {products, categories, user: req.session.user})
         })
         .catch((err) => {
             res.send(err)
@@ -48,7 +48,7 @@ app.get('/:category', (req, res) => {
     if(category === 'apple') {
         productData.getProductByManufacturer(category) 
         .then((products) => {
-            return res.render('transaction', {products, categories, username: req.session.user, role: req.session.role})
+            return res.render('transaction', {products, categories, user: req.session.user})
         })
         .catch((err) => {
             return res.send('Something went wrong =((')
@@ -57,7 +57,7 @@ app.get('/:category', (req, res) => {
     else {
         productData.getProductCategory(category)
         .then((products) => {
-            res.render('transaction', {products, categories, username: req.session.user, role: req.session.role})
+            res.render('transaction', {products, categories, user: req.session.user})
         })
     }
     

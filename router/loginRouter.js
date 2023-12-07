@@ -7,55 +7,56 @@ const bcrypt = require('bcrypt')
 
 
 app.get('/', (req, res) => {
+    res.set('Cache-Control', 'no-store')
     const error = ''
-    console.log(req.session.user)
+    // console.log(req.session.user)
     if(req.session.user) {
         return res.redirect('/')
     }
 
-    res.render('login', {error: error})
+    res.render('login', {error: error, username: '', password: ''})
 
 })
 
 app.post('/',  (req, res) => {
     const { username, password } = req.body;
-    const error_msg = ''
-    try {
-      // Fetch the hashed password from the database
-      const selectQuery = 'SELECT * FROM Users WHERE username = ?'; // Assuming admin user has id 1
-      con.query(selectQuery, [username], (selectErr, selectResult) => {
-        if (selectErr) {
-          console.error('Our fault, not yours');
-          res.status(500).json({ error: 'Internal Server Error' });
-        } else {
-            if (selectResult.length > 0) {
+    console.log(username)
+    let error_msg = ''
+    
+        // Fetch the hashed password from the database
+        const selectQuery = 'SELECT * FROM Users WHERE username = ?';
+        const param = [username]
+        con.query(selectQuery, param, (selectErr, selectResult) => {
+            if (selectErr) {
+                res.status(500).json({ error: selectErr });
+            } else if(selectResult.length > 0) {
+
                 const hashedPassword = selectResult[0].password;
 
                 // Compare the provided password with the hashed password from the database
                 const passwordMatch = bcrypt.compareSync(password, hashedPassword)
                 if (passwordMatch) {
-                    req.session.user = selectResult[0].username
-                    req.session.role = selectResult[0].is_admin
-                    req.session.user_id = selectResult[0].user_id
-                    req.session.first_login = selectResult[0].first_login
+                    const {password, ...userData} = selectResult[0]
+                    req.session.user = userData
+                    console.log(req.session.user)
+                    
+                    // If first time log in the system and not admin, redirect to change password
                     if(selectResult[0].first_login && !selectResult[0].is_admin) {
                         return res.redirect('/set_password')
                     }
                     return res.redirect('/')
-                } else {
-                    error = 'Your password is wrong.'
-                    res.render('login', {error: error_msg});
-                }
-            } else {
-                error = 'Wrong username or password'
-                res.render('login', {error: error_msg});
+                } 
+                // If wrong password, prompt user to try again
+                error_msg = 'Wrong password, please try again'
+                res.render('login', {error: error_msg, username: username, password: ''});            
             }
-        }
-      });
-    } catch (error) {
-        console.error('Error during login:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+            else {
+                error_msg = 'Wrong username or password'
+                res.render('login', {error: error_msg, username: username, password: ''});
+            }
+        });
+
+        // con.end()    
 });
 
 

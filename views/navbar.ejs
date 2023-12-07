@@ -13,12 +13,12 @@
     <div class="myNavbar" id="sidebar">
         <button onclick="closeNav()" style="color: #F4EEFF;"><i class="fa-solid fa-xmark"></i> Close</button>
         <div class="user_profile" style="">
-            <a href=""><img src="/images/profile/admin.png" alt=""><span ><%= username %></span></a> 
+            <a href="/profile?id=<%= user.user_id %>"><img src="/images/profile/<%= user.profile_picture %>" alt=""><span ><%= user.username %></span></a> 
         </div>
         <hr style="width: 80%; margin: auto;">
         <div class="nav-menu">
             <a href="/" class=""><i class="fa-solid fa-house"></i> Home</a>
-            <% if(role === 1) { %>
+            <% if(user.is_admin === 1) { %>
                 <a href="/transaction" class="product-management"><i class="fa-solid fa-cart-plus"></i> New Transaction</a>
                 <a href="javascript:void(0)" class="product-management" onclick="showOptions()"><i class="fa-solid fa-bag-shopping"></i> Product Management</a>
                 <ul class="product-management-features" >

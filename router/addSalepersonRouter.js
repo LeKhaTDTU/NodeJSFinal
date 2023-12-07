@@ -5,10 +5,16 @@ const bcrypt = require('bcrypt')
 const app = express.Router()
 const saltRounds = 10;
 app.get('/', (req, res) => {
-    salepersonData.getAllSalepersons()
-    .then((salepersons) => {
-        
-        res.render('staff', {salepersons: salepersons, role: req.session.role, username: req.session.user})
+
+    const sql = 'SELECT * FROM Users'
+    con.query(sql, (err, result) => {
+        if(err) {
+            console.log(err)
+            res.status(500).json('Internal Server Error')
+        }
+        else if(result.length > 0) {
+            res.render('salepersons', {salepersons: result, user: req.session.user})
+        }
     })
 })
 
@@ -34,6 +40,7 @@ app.post('/', (req, res) => {
                     res.redirect('/')
                 }
             });
+
         }
 
     }) 

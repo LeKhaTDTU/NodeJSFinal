@@ -8,7 +8,7 @@ CREATE TABLE `Users` (
     `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
     `fullname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
     `is_admin` boolean NOT NULL,
-    `profile_pricture` varchar(255) COLLATE utf8_unicode_ci,
+    `profile_picture` varchar(255) COLLATE utf8_unicode_ci DEFAULT 'user.jpg',
     `is_locked` boolean,
     `first_login` boolean DEFAULT true,
     UNIQUE(`email`)
@@ -29,6 +29,7 @@ CREATE TABLE `Sales` (
     `amount_given_by_customer` int NOT NULL,
     `change_to_customer` int NOT NULL,
     `user_id` int,
+    `date` date,
     FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -43,14 +44,6 @@ CREATE TABLE `Products` (
     `creation_date` date
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `Products_Sold` (
-    `product_id` int,
-    `product_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-    `sell_price` int NOT NULL, 
-    `quantity` int NOT NULL,
-    `sell_date` date,
-    FOREIGN KEY(`product_id`) REFERENCES `Products`(`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;   
 
 CREATE TABLE `Sale_Details` (
     `sale_detail_id` int PRIMARY KEY AUTO_INCREMENT,
@@ -58,13 +51,12 @@ CREATE TABLE `Sale_Details` (
     `unit_price` int, 
     `sale_id` int,
     `product_id` int,
-    `pay_method` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
     `date` Date,
     FOREIGN KEY (`sale_id`) REFERENCES `Sales`(`sale_id`),
     FOREIGN KEY (`product_id`) REFERENCES `Products`(`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `Users`(`user_id`, `username`, `password`, `email`, `fullname`, `is_admin`, `profile_pricture`, `is_locked`) VALUES (1,'admin','$2b$10$GUX7D4isxJFeqX8hy5eB2OvJbKlXlJG3QNjhMOFOhtZam1PyrlC2K','admin@gmail.com', 'Admin', true, 'admin.jpg',false);
+INSERT INTO `Users`(`user_id`, `username`, `password`, `email`, `fullname`, `is_admin`, `is_locked`) VALUES (1,'admin','$2b$10$GUX7D4isxJFeqX8hy5eB2OvJbKlXlJG3QNjhMOFOhtZam1PyrlC2K','admin@gmail.com', 'Admin', true,false);
 
 ALTER TABLE `Users` 
 MODIFY `user_id` int AUTO_INCREMENT, AUTO_INCREMENT = 2;

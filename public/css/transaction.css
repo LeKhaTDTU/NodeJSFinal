@@ -210,7 +210,7 @@ h1 {
 .product-order .product-selected table th, td {
     border-bottom: 1px solid #ddd;
     padding: 8px;
-    text-align: left;
+    text-align: center;
     
 }  
 
@@ -218,6 +218,7 @@ h1 {
     border: none;
     padding: 10px;
     border-radius: 5px;
+    background-color:rgb(227, 57, 57)
 }
 .product-order .product-selected table tbody .desc-btn:hover {
     cursor: pointer;
