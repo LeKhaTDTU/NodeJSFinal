@@ -40,7 +40,8 @@ app.use('/sale', fistTimeLoginMiddleware, saleRouter)
 app.use('/salepersons', addSalepersonRouter)
 app.use('/logout', logoutRouter)
 app.use('/set_password', setPasswordRouter)
-app.use('/profile', fistTimeLoginMiddleware, profileRouter)
+app.use('/profile', fistTimeLoginMiddleware)
+app.use('/profile', profileRouter);
 app.get('/', (req, res) => {
   res.set('Cache-Control', 'no-store')
 
