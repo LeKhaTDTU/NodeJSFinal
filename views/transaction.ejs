@@ -52,8 +52,8 @@
                             
             <div class="product-order">
                 <h1>YOUR ORDER</h1>
-                <p>Name:<input type="text" id="nameInput" name="name" style="border: none; outline: none; padding: 4px" oninput="validateName()" maxlength="20"></p>
-                <p>Phone:<input type="tel" id="phoneNumberInput" name="phone" style="border: none; outline: none; padding: 4px" oninput="validatePhoneNumber()" maxlength="11"></p>
+                <p>Name:<input type="text" id="nameInput" name="name" style="border: none; outline: none; padding: 4px" oninput="validateName()" maxlength="20" autocomplete="off"></p>
+                <p>Phone:<input type="tel" id="phoneNumberInput" name="phone" style="border: none; outline: none; padding: 4px" oninput="validatePhoneNumber()" maxlength="11" autocomplete="off"></p>
                 <p>Date: <input type="text" id="dateInput" style="border: none; outline: none; padding: 4px" readonly></p>
                 <hr>
 
@@ -151,6 +151,26 @@
         const currentDate = new Date();
         dateInput.value = formatDateTime(currentDate);
     });
+
+    function lookupCustomerByPhone(phoneNumber) {
+  fetch(`/api/lookup/${phoneNumber}`)
+    .then(response => response.json())
+    .then(data => {
+      // Update the name and address fields with data from the server
+      document.getElementById('nameInput').value = data.name;
+      // Add logic to update address field if needed
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+// Attach an event listener to the phone number input
+const phoneInput = document.getElementById('phoneNumberInput');
+phoneInput.addEventListener('input', function () {
+  const phoneNumber = this.value;
+  lookupCustomerByPhone(phoneNumber);
+});
     </script>
         
 </html>
