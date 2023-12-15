@@ -8,7 +8,7 @@ const con = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'POS'
+    database: 'pos'
 })
 
 module.exports = con

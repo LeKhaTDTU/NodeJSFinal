@@ -1,9 +1,10 @@
-//app.js
 const express = require('express');
 const port = 8080;
 const session = require('express-session')
 
 const transactionRouter = require('./router/transactionRouter')
+const findCustomerRouter = require('./router/findCustomerRouter')
+const addCustomerRouter = require('./router/addCustomerRouter')
 const saleRouter = require('./router/saleRouter')
 const loginRouter = require('./router/loginRouter')
 const logoutRouter = require('./router/logoutRouter')
@@ -36,6 +37,8 @@ app.use(loginMiddleware)
 app.use(express.static(__dirname + '/public'));
 
 app.use('/transaction', fistTimeLoginMiddleware, transactionRouter)
+// app.use('/find_customer', findCustomerRouter)
+// app.use('/add_customer', addCustomerRouter)
 app.use('/sale', fistTimeLoginMiddleware, saleRouter)
 app.use('/salepersons', addSalepersonRouter)
 app.use('/logout', logoutRouter)

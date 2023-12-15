@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Products</title>
     <script src="/js/workspace.js" defer></script>
+    <script src="/js/customer.js" defer></script>
     <link rel="stylesheet" href="/css/transaction.css">
     <script src="https://kit.fontawesome.com/ad1797946c.js" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,100;1,300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,100;1,300&display=swap" rel="stylesheet">    
     </head>
     <body>
         <%- include('navbar') %>
@@ -30,7 +31,7 @@
                     <li class="category" style="text-align: center;"><a href="/transaction/laptop">Laptop <i class="fa-solid fa-laptop"></i></a></li>
                     <li class="category" style="text-align: center;"><a href="/transaction/apple">Apple <i class="fa-brands fa-apple"></i></a></li>
                     <!-- <li class="category" style="text-align: center;"><a href="/products/phone">Dessert <i class="fa-solid fa-ice-cream"></i></a></li> -->
-                    
+
                 </ul>
             
             <div class="product-grid">
@@ -51,11 +52,36 @@
                 
                             
             <div class="product-order">
-                <h1>YOUR ORDER</h1>
-                <p>Name:<input type="text" id="nameInput" name="name" style="border: none; outline: none; padding: 4px" oninput="validateName()" maxlength="20" autocomplete="off"></p>
-                <p>Phone:<input type="tel" id="phoneNumberInput" name="phone" style="border: none; outline: none; padding: 4px" oninput="validatePhoneNumber()" maxlength="11" autocomplete="off"></p>
-                <p>Date: <input type="text" id="dateInput" style="border: none; outline: none; padding: 4px" readonly></p>
-                <hr>
+                <!-- This form is for old custormer -->
+                <div class="form-container" id="form1Container">
+                <form id="GETcustomerForm" method="GET" action="/find_customer">
+                    <h1>YOUR ORDER</h1>
+                    <p>Name:<input type="text" id="nameShow" name="name" style="border: none; outline: none; padding: 4px" readonly></p>
+                    <p>Phone:
+                        <input type="tel" id="phoneNumberInput1" name="phone" style="border: none; outline: none; padding: 4px" oninput="searchCustomer()" maxlength="11" autocomplete="off">
+                        <button type="submit" id="getcustormer" class="btn btn-primary" data-toggle="modal" data-target="#addCustomerModal">
+                            +
+                        </button>
+                    </p>
+                    <p>Address:<input type="text" id="addressShow" name="address" style="border: none; outline: none; padding: 4px" readonly></p>
+                    <p>Date: <input type="text" id="dateInput" style="border: none; outline: none; padding: 4px" readonly></p>
+                    <hr>
+                </form>
+            </div>
+                
+                <!-- This form is for new customer -->
+            <div class="form-container" id="form2Container">
+                <form id="ADDcustomerForm" method="POST" action="/add_customer">
+                    <h1>Add customer</h1>
+                    <p>Name:<input type="text" id="nameInput" name="name" style="border: none; outline: none; padding: 4px" oninput="validateName()"></p>
+                    <p>Phone:<input type="tel" id="phoneNumberInput2" name="phone" style="border: none; outline: none; padding: 4px" oninput="validatePhoneNumber()" maxlength="11" autocomplete="off"></p>
+                    <p>Address:<input type="text" id="addressInput" name="address" style="border: none; outline: none; padding: 4px"></p>
+                    <button type="submit" id="addcustormer" class="btn btn-primary align-right" data-toggle="modal" data-target="#addCustomerModal">
+                        Add
+                    </button>
+                    <hr>
+                </form>
+            </div>
 
                 <div class="product-selected">
                 
@@ -98,79 +124,5 @@
         </main>
     </body>
 
-    <script>
-        // function calChange() {
-        //     const total_cost = parseInt(document.getElementById('total-cost').textContent)
-        //     const customer_pay = parseInt(document.getElementById('customerPay').value)
-        //     const changeToCustomer = document.getElementById('changeToCustomer')
-        //     if(!customer_pay) {
-        //         changeToCustomer.textContent = 0
-        //         return ;
-        //     }
-        //     const change = customer_pay - total_cost
-        //     changeToCustomer.textContent = change
-        //     console.log(customer_pay)
-        //     console.log(changeToCustomer.textContent)
-
-        // }
-
-        //This function is for "Phone" to receive only numbers
-        function validatePhoneNumber() {
-        // Get the input element
-        var phoneInput = document.getElementById('phoneNumberInput');
-        
-        // Remove non-numeric characters using a regular expression
-        phoneInput.value = phoneInput.value.replace(/\D/g, '');
-    }
-        //This function is for "Name" to receive only letters
-        function validateName() {
-        // Get the input element
-        var nameInput = document.getElementById('nameInput');
-        
-        // Remove non-alphabetic characters using a regular expression
-        nameInput.value = nameInput.value.replace(/[^A-Za-z]/g, '');
-    }
-
-        // Function to format the date and time as DD/MM/YYYY HH:mm:ss
-        function formatDateTime(dateTime) {
-        const options = { 
-            day: '2-digit', 
-            month: '2-digit', 
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-        };
-        return new Intl.DateTimeFormat('en-GB', options).format(dateTime);
-    }
-
-    // Set the current date and time when the page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        const dateInput = document.getElementById('dateInput');
-        const currentDate = new Date();
-        dateInput.value = formatDateTime(currentDate);
-    });
-
-    function lookupCustomerByPhone(phoneNumber) {
-  fetch(`/api/lookup/${phoneNumber}`)
-    .then(response => response.json())
-    .then(data => {
-      // Update the name and address fields with data from the server
-      document.getElementById('nameInput').value = data.name;
-      // Add logic to update address field if needed
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-}
-
-// Attach an event listener to the phone number input
-const phoneInput = document.getElementById('phoneNumberInput');
-phoneInput.addEventListener('input', function () {
-  const phoneNumber = this.value;
-  lookupCustomerByPhone(phoneNumber);
-});
-    </script>
-        
+    
 </html>

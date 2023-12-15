@@ -1,1 +1,4 @@
 node_modules/
+public/js/customer.js
+router/addCustomerRouter.js
+router/findCustomerRouter.js
