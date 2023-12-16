@@ -58,7 +58,7 @@
                     <h1>YOUR ORDER</h1>
                     <p>Name:<input type="text" id="nameShow" name="name" style="border: none; outline: none; padding: 4px" readonly></p>
                     <p>Phone:
-                        <input type="tel" id="phoneNumberInput1" name="phone" style="border: none; outline: none; padding: 4px" oninput="searchCustomer()" maxlength="11" autocomplete="off">
+                        <input type="tel" id="phoneNumberInput1" name="phone" style="border: none; outline: none; padding: 4px" maxlength="11" autocomplete="off">
                         <button type="submit" id="getcustormer" class="btn btn-primary" data-toggle="modal" data-target="#addCustomerModal">
                             +
                         </button>
@@ -73,8 +73,8 @@
             <div class="form-container" id="form2Container">
                 <form id="ADDcustomerForm" method="POST" action="/add_customer">
                     <h1>Add customer</h1>
-                    <p>Name:<input type="text" id="nameInput" name="name" style="border: none; outline: none; padding: 4px" oninput="validateName()"></p>
-                    <p>Phone:<input type="tel" id="phoneNumberInput2" name="phone" style="border: none; outline: none; padding: 4px" oninput="validatePhoneNumber()" maxlength="11" autocomplete="off"></p>
+                    <p>Name:<input type="text" id="nameInput" name="name" style="border: none; outline: none; padding: 4px"></p>
+                    <p>Phone:<input type="tel" id="phoneNumberInput2" name="phone" style="border: none; outline: none; padding: 4px" maxlength="11" autocomplete="off"></p>
                     <p>Address:<input type="text" id="addressInput" name="address" style="border: none; outline: none; padding: 4px"></p>
                     <button type="submit" id="addcustormer" class="btn btn-primary align-right" data-toggle="modal" data-target="#addCustomerModal">
                         Add

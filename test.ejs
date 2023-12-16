@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Form</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('#phone').on('input', function() {
+          const phone = $(this).val();
+          $.ajax({
+            url: '/retrieve-data',
+            method: 'POST',
+            data: { phone: phone },
+            success: function(response) {
+              $('#name').val(response.name);
+              $('#address').val(response.address);
+            }
+          });
+        });
+
+        $('#toggleFormButton').click(function() {
+          $('#registerForm').toggle();
+          $('form:not(#registerForm)').toggle();
+        });
+
+        $('#registerForm').submit(function(event) {
+          event.preventDefault(); // Prevent form submission
+
+          // Perform form validation
+          const newName = $('#newName').val();
+          const newPhone = $('#newPhone').val();
+          const newAddress = $('#newAddress').val();
+
+          if (newName.trim() === '' || newPhone.trim() === '' || newAddress.trim() === '') {
+            alert('Please fill in all fields');
+            return;
+          }
+
+          // Perform form submission via AJAX
+          $.ajax({
+            url: $(this).attr('action'),
+            method: $(this).attr('method'),
+            data: $(this).serialize(),
+            success: function(response) {
+              $('#registerForm').toggle();
+              $('form:not(#registerForm)').toggle();
+              $('#phone').val(response.phone);
+              $('#name').val(response.name);
+              $('#address').val(response.address);
+              document.getElementById("registerForm").reset();
+            }
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <form>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" value="<%= name %>" /><br />
+    
+      <label for="phone">Phone:</label>
+      <input type="text" id="phone" name="phone" value="<%= phone %>" /><br />
+    
+      <label for="address">Address:</label>
+      <input type="text" id="address" name="address" value="<%= address %>" /><br />
+    </form>
+
+    <button id="toggleFormButton">Toggle Form</button>
+
+    <form id="registerForm" style="display: none;" action="/register" method="POST">
+      <h2>Add New Customer</h2>
+      <label for="newName">Customer Name:</label>
+      <input type="text" id="newName" name="newName" required /><br />
+
+      <label for="newPhone">Customer Phone:</label>
+      <input type="text" id="newPhone" name="newPhone" required /><br />
+
+      <label for="newAddress">Customer Address:</label>
+      <input type="text" id="newAddress" name="newAddress" required /><br />
+
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
