@@ -11,6 +11,7 @@ CREATE TABLE `Users` (
     `profile_picture` varchar(255) COLLATE utf8_unicode_ci DEFAULT 'user.jpg',
     `is_locked` boolean,
     `first_login` boolean DEFAULT true,
+    
     UNIQUE(`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

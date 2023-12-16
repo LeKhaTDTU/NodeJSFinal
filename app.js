@@ -1,10 +1,11 @@
 const express = require('express');
 const port = 8080;
 const session = require('express-session')
+const methodOverride = require('method-override');
 
 const transactionRouter = require('./router/transactionRouter')
-const findCustomerRouter = require('./router/findCustomerRouter')
-const addCustomerRouter = require('./router/addCustomerRouter')
+//const findCustomerRouter = require('./router/findCustomerRouter')
+//const addCustomerRouter = require('./router/addCustomerRouter')
 const saleRouter = require('./router/saleRouter')
 const loginRouter = require('./router/loginRouter')
 const logoutRouter = require('./router/logoutRouter')
@@ -13,12 +14,14 @@ const addSalepersonRouter = require('./router/addSalepersonRouter')
 const setPasswordRouter = require('./router/setPasswordRouter')
 const profileRouter = require('./router/profileRouter')
 const fistTimeLoginMiddleware = require('./middlewares/firstTimeLoginMiddleware')
+const viewProductRouter = require('./router/viewProductRouter');
+const updateProductRouter = require('./router/updateProductRouter')
 const con = require('./database/db')
 
 const app = express();
 app.set('view engine', 'ejs')
 
-
+app.use(methodOverride('_method'));
 app.use(session({
   secret: 'hello',
   resave: false,
@@ -35,7 +38,6 @@ app.use('/login', loginRouter)
 app.use(loginMiddleware)
 
 app.use(express.static(__dirname + '/public'));
-
 app.use('/transaction', fistTimeLoginMiddleware, transactionRouter)
 // app.use('/find_customer', findCustomerRouter)
 // app.use('/add_customer', addCustomerRouter)
@@ -44,7 +46,9 @@ app.use('/salepersons', addSalepersonRouter)
 app.use('/logout', logoutRouter)
 app.use('/set_password', setPasswordRouter)
 app.use('/profile', fistTimeLoginMiddleware)
-app.use('/profile', profileRouter);
+app.use('/profile', profileRouter)
+app.use('/products', viewProductRouter);
+app.use('/updateproducts', updateProductRouter);
 app.get('/', (req, res) => {
   res.set('Cache-Control', 'no-store')
 
@@ -55,7 +59,7 @@ app.get('/', (req, res) => {
   if(!req.session.user) {
       return res.redirect('/login')
   }
-  
+  console.log(req.session)
   const user = req.session.user
   res.render('home', {user: user})
 

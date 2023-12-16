@@ -1,49 +1,77 @@
+
 const userData = require('../model/account/accountModel')
 
-async function updateUserProfileAvatar(UsersId, avatarPath, con) {
-  /*try {
-    // Use the promise-based query function
-    const [rows, fields] = await con.promise().query('UPDATE users SET avatar = ? WHERE user_id = ?', [avatarPath, UsersId]);
-    // Handle the result if needed
-    console.log(rows);
-    console.log(fields);
-  } catch (error) {
-    // Handle any errors that occur during the update
-    console.error(error);
-    throw error; // You can choose to handle or propagate the error
-  }*/
+//const saltRounds = 10
 
+async function updateUserProfile(userId, avatarPath, userData, con) {
   try {
-    // Check if the user exists
-    const [userRows, userFields] = await con.promise().query('SELECT * FROM users WHERE user_id = ?', [UsersId]);
+    const { fullname, email, username, phone } = userData;
 
-    console.log('User Rows:', userRows);
+    // Update user profile in the database
+    await con.execute(
+      'UPDATE users SET fullname = ?, email = ?, avatar = ?, username = ?, phone = ? WHERE user_id = ?',
+      [fullname, email, avatarPath, username, phone, userId]
+    );
 
-    if (userRows.length === 0) {
-      // Handle the case where the user is not found
-      console.error('User not found for user_id:', UsersId);
-      return;
-    }
-
-    // Use the promise-based query function to update the avatar
-    const [updateRows, updateFields] = await con.promise().query('UPDATE users SET profile_picture = ? WHERE user_id = ?', [avatarPath, UsersId]);
-
-    if (updateRows.affectedRows === 0) {
-      // Handle the case where no rows were updated (avatar not updated)
-      console.error('Avatar not updated for user_id:', UsersId);
-      return;
-    }
-
-    // Handle the result if needed
-    console.log('Avatar updated successfully for user_id:', UsersId);
-
+    console.log('User profile updated successfully.');
   } catch (error) {
-    // Handle any errors that occur during the update
-    console.error('Error updating avatar:', error);
-
-    // Throw the error to propagate it, or handle it as needed
+    console.error('Error updating user profile:', error);
     throw error;
   }
 }
 
-module.exports = { updateUserProfileAvatar };
+// async function validateCurrentPassword(userId, currentPassword, con) {
+//   const [rows, fields] = await con.execute(
+//       'SELECT * FROM users WHERE user_id = ?',
+//       [userId]
+//   );
+
+//   if (rows.length > 0) {
+//       const user = rows[0];
+//       return await bcrypt.compare(currentPassword, user.password);
+//   }
+
+//   return false;
+// }
+
+// async function updatePassword(userId, newPassword, con) {
+//   // Hash the new password before updating
+//   const hashedPassword = await bcrypt.hash(newPassword, 10);
+//   await con.execute(
+//       'UPDATE users SET password = ? WHERE user_id = ?',
+//       [hashedPassword, userId]
+    
+//   );
+//   console.log('...........')  
+// }
+// const bcrypt = require('bcrypt');
+// const con = require('../database/db');
+
+// async function validateCurrentPassword(userId, currentPassword, con) {
+//   const [rows, fields] = await con.execute(
+//     'SELECT * FROM users WHERE user_id = ?',
+//     [userId]
+//   );
+
+//   if (rows.length > 0) {
+//     const user = rows[0];
+//     return await bcrypt.compare(currentPassword, user.password);
+//   }
+
+//   return false;
+// }
+
+// async function updatePassword(userId, newPassword) {
+//   console.log('Updating password for user ID:', userId);
+//   const hashedPassword = await bcrypt.hash(newPassword, 10);
+//   console.log('Hashed Password:', hashedPassword);
+//   await con.execute(
+//     'UPDATE users SET password = ? WHERE user_id = ?',
+//     [hashedPassword, userId]
+//   );
+//   console.log('Password updated successfully.');
+// }
+
+// module.exports = { validateCurrentPassword, updatePassword };
+module.exports = { updateUserProfile };
+

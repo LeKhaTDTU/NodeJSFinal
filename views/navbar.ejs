@@ -13,25 +13,27 @@
     <div class="myNavbar" id="sidebar">
         <button onclick="closeNav()" style="color: #F4EEFF;"><i class="fa-solid fa-xmark"></i> Close</button>
         <div class="user_profile" style="">
-            <a href="/profile?id=<%= user.user_id %>"><img src="/images/profile/<%= user.profile_picture %>" alt=""><span ><%= user.username %></span></a> 
+            <a href="/profile?id=<%= user.user_id %>"><img src="<%= user.avatar %>" alt=""><span ><%= user.fullname %></span></a> 
         </div>
         <hr style="width: 80%; margin: auto;">
         <div class="nav-menu">
             <a href="/" class=""><i class="fa-solid fa-house"></i> Home</a>
             <% if(user.is_admin === 1) { %>
                 <a href="/transaction" class="product-management"><i class="fa-solid fa-cart-plus"></i> New Transaction</a>
-                <a href="javascript:void(0)" class="product-management" onclick="showOptions()"><i class="fa-solid fa-bag-shopping"></i> Product Management</a>
-                <ul class="product-management-features" >
+                <a href="/products" class="product-management"><i class="fa-solid fa-cart-plus"></i> Products Mangement</a>
+                <!-- <a href="javascript:void(0)" class="product-management" onclick="showOptions()"><i class="fa-solid fa-bag-shopping"></i> Product Management</a> -->
+                <!-- <ul class="product-management-features" >
                     <li class="feature"><a href="/products">View products</a></li>
                     <li class="feature"><a href="/products/add">Add new product</a></li>
                     <li class="feature"><a href="/products/delete">Delete a product</a></li>
                     <li class="feature"><a href="/products/update">Update a product</a></li>
-                </ul>
+                </ul> -->
                 <a class="" href="/sale"><i class="fa-solid fa-clock-rotate-left"></i> Sale History</a>
                 <a class="" href="/salepersons"><i class="fa-solid fa-users"></i> Staffs</a>
                 <!-- <a href="/sale_history"><i class="fa-solid fa-clock-rotate-left"></i> Sale History</a> -->
             <% } else { %> 
                 <a href="/transaction" class="product-management"><i class="fa-solid fa-cart-plus"></i> Transaction</a>
+                <a href="/products" class="product-management"><i class="fa-solid fa-cart-plus"></i> View Products</a>
                 <a class="link" href="/sale"><i class="fa-solid fa-clock-rotate-left"></i> Sale history</a>
             <% } %>
         </div>

@@ -29,7 +29,7 @@ app.post('/', (req, res) => {
     const password = username
     bcrypt.hash(password, saltRounds, (err, hashed_password) => {
         if(err) {
-            alert('Somethig went wrong')
+            alert('Something went wrong')
         } else {
             con.query(sql, [username, hashed_password, email, fullname, 0, 0], (err, result) => {
                 if (err) {
